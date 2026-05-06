@@ -8,22 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #e5e5e5;
-        }
-        .glass-effect {
-            background: rgba(23, 23, 23, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .hero-glow {
-            box-shadow: 0 0 150px 50px rgba(79, 70, 229, 0.3);
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="antialiased">
 
@@ -111,14 +96,43 @@
 
         <!-- Contact Section -->
         <section id="contact" class="py-20 md:py-32 bg-[#111111]">
-            <div class="container mx-auto px-6 text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Get In Touch</h2>
-                <p class="text-lg text-neutral-400 mb-8 max-w-2xl mx-auto">I'm currently open to new opportunities and collaborations. Feel free to reach out if you have a project in mind or just want to connect!</p>
-                <div class="flex justify-center items-center space-x-6">
-                     <a href="https://www.linkedin.com/in/debanjanpal/" target="_blank" rel="noopener noreferrer" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/20">
-                        Say Hello
-                    </a>
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Get In Touch</h2>
+                    <p class="text-lg text-neutral-400 max-w-2xl mx-auto">I'm currently open to new opportunities and collaborations. Feel free to reach out if you have a project in mind or just want to connect!</p>
                 </div>
+                
+                <form action="https://formsubmit.co/debanjanpal59@gmail.com" method="POST" class="max-w-2xl mx-auto glass-effect p-6 md:p-8 rounded-2xl">
+                    <!-- Disable captcha for a smoother user experience -->
+                    <input type="hidden" name="_captcha" value="false">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-neutral-300 mb-2">Name</label>
+                            <input type="text" id="name" name="name" required class="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white transition-colors" placeholder="Your Name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-neutral-300 mb-2">Email</label>
+                            <input type="email" id="email" name="email" required class="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white transition-colors" placeholder="your@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="subject" class="block text-sm font-medium text-neutral-300 mb-2">Subject</label>
+                        <input type="text" id="subject" name="_subject" required class="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white transition-colors" placeholder="Project Inquiry">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="message" class="block text-sm font-medium text-neutral-300 mb-2">Content</label>
+                        <textarea id="message" name="message" rows="5" required class="w-full px-4 py-3 bg-neutral-900/50 border border-neutral-700 rounded-lg focus:outline-none focus:border-indigo-500 text-white transition-colors resize-none" placeholder="Your message here..."></textarea>
+                    </div>
+                    
+                    <div class="text-center">
+                        <button type="submit" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-indigo-500/20 w-full md:w-auto">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
             </div>
         </section>
 
@@ -138,115 +152,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-instagram"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                 </a>
             </div>
-            <p>&copy; 2024 Debanjan Pal. All rights reserved.</p>
+            <p>&copy; 2026 Debanjan Pal. All rights reserved.</p>
         </div>
     </footer>
 
-    <script>
-        // Mobile menu toggle
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when a link is clicked
-        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Header scroll effect
-        const header = document.getElementById('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('py-2');
-                header.classList.remove('py-4');
-            } else {
-                header.classList.add('py-4');
-                header.classList.remove('py-2');
-            }
-        });
-
-        // --- Load Projects ---
-        function loadProjects() {
-            const projectGrid = document.getElementById('project-grid');
-            try {
-                const projects = [
-                    {
-                        title: "Dev-Portfolio",
-                        description: "A sleek, modern portfolio for developers to showcase their projects, skills, and experience.",
-                        videoUrl: "https://drive.google.com/uc?export=view&id=1-8_O3y6s1sZ2-X2JvHqJ8Jc_xP_g1Qv5",
-                        tags: ["Unity", "C#", "UI/UX"],
-                        demoUrl: "https://gitlab.com/debanjan-portfolio/Dev-Portfolio"
-                    },
-                    {
-                        title: "Brain-Tumor-Detection",
-                        description: "Deep learning model designed to detect and classify brain tumors from MRI scans.",
-                        videoUrl: "https://drive.google.com/uc?export=view&id=1-AFJm3dY7N5Ym7v1pC8Q7K5n2-h9sS8D",
-                        tags: ["Python", "CNN", "Healthcare"],
-                        demoUrl: "https://gitlab.com/debanjan-portfolio/Brain-Tumor-Detection"
-                    },
-                    {
-                        title: "E-commerce-Website",
-                        description: "Full-stack e-commerce platform with MERN stack, featuring auth and secure checkout.",
-                        videoUrl: "https://drive.google.com/uc?export=view&id=1-DB7F8f-tTjT5qJ1qV7-H7d5J-l1jYvJ",
-                        tags: ["React", "Node.js", "MongoDB"],
-                        demoUrl: "https://gitlab.com/debanjan-portfolio/E-commerce-Website"
-                    }
-                ];
-                
-                if (!projects || projects.length === 0) {
-                    projectGrid.innerHTML = '<p class="text-neutral-400 col-span-full text-center">No projects to display at the moment.</p>';
-                    return;
-                }
-
-                projectGrid.innerHTML = '';
-                projects.forEach(project => {
-                    const projectCard = document.createElement('div');
-                    projectCard.className = 'glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300 flex flex-col';
-                    
-                    const tagsHtml = project.tags.map(tag => `<span class="bg-neutral-800 text-indigo-300 text-xs font-medium px-3 py-1 rounded-full border border-indigo-500/10">${tag}</span>`).join('');
-
-                    projectCard.innerHTML = `
-                        <div class="w-full h-48 bg-neutral-900 flex items-center justify-center relative group">
-                            <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
-                                <source src="${project.videoUrl}" type="video/mp4">
-                            </video>
-                        </div>
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h3 class="text-xl font-semibold text-white mb-2">${project.title}</h3>
-                            <p class="text-neutral-400 mb-4 text-sm flex-grow">${project.description}</p>
-                            <div class="flex flex-wrap gap-2 mb-4">${tagsHtml}</div>
-                            <div class="mt-auto">
-                                <a href="${project.demoUrl}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center">
-                                    View Project <span class="ml-1">→</span>
-                                </a>
-                            </div>
-                        </div>
-                    `;
-                    projectGrid.appendChild(projectCard);
-                });
-
-            } catch (error) {
-                console.error("Failed to load projects:", error);
-                projectGrid.innerHTML = '<p class="text-red-400 col-span-full text-center">Could not load projects. Please try again later.</p>';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', loadProjects);
-    </script>
+    <!-- Three.js and Vanta.js via CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
