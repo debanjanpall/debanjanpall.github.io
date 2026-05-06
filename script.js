@@ -82,11 +82,16 @@ async function loadProjects() {
             // Check if the project object contains a GIF URL and create the image tag if it does
             let gifHtml = '';
             if (project.gifUrl) {
-                // Google Drive recently changed how "view" links work, often serving an HTML page instead of the image.
-                // Switching the URL parameter to "download" forces Drive to serve the raw, animated GIF file.
-                const directGifUrl = project.gifUrl.replace('export=view', 'export=download');
+                // Google Drive recently rolled out security updates blocking direct image embedding via 'export' links,
+                // regardless of file size, causing them to fail in <img> tags.
+                // By extracting the file ID and using Google's alternate content delivery URL (lh3), we can bypass this.
+                const fileIdMatch = project.gifUrl.match(/id=([a-zA-Z0-9_-]+)/);
                 
-                gifHtml = `<img src="${directGifUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10">`;
+                if (fileIdMatch && fileIdMatch[1]) {
+                    const fileId = fileIdMatch[1];
+                    const directGifUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+                    gifHtml = `<img src="${directGifUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10">`;
+                }
             }
 
             projectCard.innerHTML = `
