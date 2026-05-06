@@ -79,8 +79,15 @@ async function loadProjects() {
             const projectCard = document.createElement('div');
             projectCard.className = 'glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-300 flex flex-col p-6';
 
+            // Check if the project object contains a GIF URL and create the image tag if it does
+            let gifHtml = '';
+            if (project.gifUrl) {
+                gifHtml = `<img src="${project.gifUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10">`;
+            }
+
             projectCard.innerHTML = `
                 <div class="flex flex-col flex-grow">
+                    ${gifHtml}
                     <h3 class="text-xl font-semibold text-white mb-2">${project.title}</h3>
                     <p class="text-neutral-400 mb-4 text-sm flex-grow">Project folder loaded from Google Drive.</p>
                     <div class="mt-auto">
