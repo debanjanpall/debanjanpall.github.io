@@ -1,5 +1,5 @@
-// Initialize Vanta Birds on the Hero section
-VANTA.BIRDS({
+// Initialize Vanta Waves on the Hero section
+VANTA.WAVES({
     el: "#home",
     mouseControls: true,
     touchControls: true,
@@ -8,9 +8,7 @@ VANTA.BIRDS({
     minWidth: 200.00,
     scale: 1.00,
     scaleMobile: 1.00,
-    backgroundColor: 0x0a0a0a, // Matches your body background
-    color1: 0x4f46e5,         // Matches indigo-600
-    color2: 0x818cf8          // Matches indigo-400
+    color: 0x181818
 });
 
 // Mobile menu toggle

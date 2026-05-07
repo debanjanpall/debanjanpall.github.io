@@ -12,3 +12,64 @@ body {
 .hero-glow {
     box-shadow: 0 0 150px 50px rgba(79, 70, 229, 0.3);
 }
+
+/* Glitch Effect */
+.glitch {
+    position: relative;
+    display: inline-block; /* Ensures the scale transform perfectly wraps the text */
+    animation: heartbeat-pump 1.5s infinite;
+}
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    clip-path: inset(100% 0 0 0); /* Keep the glitch layer completely hidden by default */
+}
+.glitch::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00c1; /* Magenta */
+    animation: glitch-anim-1 1.5s infinite linear;
+}
+.glitch::after {
+    left: -2px;
+    text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1; /* Cyan and a hint of magenta */
+    animation: glitch-anim-2 1.5s infinite linear;
+}
+
+/* Simulates the physical thump of a heartbeat */
+@keyframes heartbeat-pump {
+    0%, 10%, 20%, 35%, 100% { transform: scale(1); }
+    5% { transform: scale(1.02); }
+    27% { transform: scale(1.03); }
+}
+
+@keyframes glitch-anim-1 {
+    0%, 9.9%, 10.1%, 19.9%, 20.1%, 34.9%, 35.1%, 100% { clip-path: inset(100% 0 0 0); }
+    2% { clip-path: inset(20% 0 60% 0); }
+    4% { clip-path: inset(70% 0 10% 0); }
+    6% { clip-path: inset(10% 0 80% 0); }
+    8% { clip-path: inset(80% 0 5% 0); }
+    22% { clip-path: inset(5% 0 85% 0); }
+    25% { clip-path: inset(90% 0 2% 0); }
+    28% { clip-path: inset(30% 0 40% 0); }
+    31% { clip-path: inset(70% 0 10% 0); }
+    34% { clip-path: inset(15% 0 60% 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0%, 9.9%, 10.1%, 19.9%, 20.1%, 34.9%, 35.1%, 100% { clip-path: inset(100% 0 0 0); }
+    2% { clip-path: inset(60% 0 20% 0); }
+    4% { clip-path: inset(10% 0 70% 0); }
+    6% { clip-path: inset(80% 0 10% 0); }
+    8% { clip-path: inset(5% 0 80% 0); }
+    22% { clip-path: inset(85% 0 5% 0); }
+    25% { clip-path: inset(2% 0 90% 0); }
+    28% { clip-path: inset(40% 0 30% 0); }
+    31% { clip-path: inset(10% 0 70% 0); }
+    34% { clip-path: inset(60% 0 15% 0); }
+}

@@ -15,7 +15,7 @@
     <!-- Header -->
     <header id="header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 glass-effect">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-white tracking-wider">DP.</a>
+            <a href="#" class="text-2xl font-bold text-white tracking-wider">DP</a>
             <nav class="hidden md:flex items-center space-x-8">
                 <a href="#home" class="text-neutral-300 hover:text-indigo-400 transition-colors duration-300">Home</a>
                 <a href="#about" class="text-neutral-300 hover:text-indigo-400 transition-colors duration-300">About</a>
@@ -44,16 +44,19 @@
         <section id="home" class="min-h-screen flex items-center justify-center text-center relative overflow-hidden">
             <div class="absolute inset-0 hero-glow opacity-50"></div>
             <div class="relative z-10 container mx-auto px-6">
-                <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4">
+                <h1 data-text="Hi, I'm Debanjan Pal" class="glitch text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight mb-4">
                     Hi, I'm Debanjan Pal
                 </h1>
                 <p class="text-lg md:text-2xl text-indigo-300 mb-8">
+                <p class="text-lg md:text-2xl text-white mb-8">
                     Passionate Unity Developer | 2D, 3D Game Specialist | AR/VR Enthusiast
                 </p>
                 <a href="#projects" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105">
                     View My Work
                 </a>
             </div>
+            <!-- Gradient fade to blend with About section -->
+            <div class="absolute bottom-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-transparent to-[#111111] pointer-events-none z-0"></div>
         </section>
 
         <!-- About Section -->
@@ -85,7 +88,7 @@
         </section>
 
         <!-- Projects Section -->
-        <section id="projects" class="py-20 md:py-32">
+        <section id="projects" class="py-20 md:py-32 bg-[#111111]">
             <div class="container mx-auto px-6">
                 <h2 class="text-3xl md:text-4xl font-bold text-center text-white mb-16">My Projects</h2>
                 <div id="project-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -189,7 +192,7 @@
 
     <!-- Three.js and Vanta.js via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.birds.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
