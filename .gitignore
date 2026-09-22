@@ -1,0 +1,7 @@
+# High-resolution original backups
+*-original.*
+assets/*-original.*
+
+# OS files
+.DS_Store
+Thumbs.db
