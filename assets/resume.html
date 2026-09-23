@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debanjan Pal - Senior Game Developer &amp; VR Specialist - Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1e293b;
+            background: #ffffff;
+            width: 210mm;
+            height: 297mm;
+            max-height: 297mm;
+            padding: 12mm 15mm 10mm 15mm;
+            margin: 0 auto;
+            overflow: hidden;
+            font-size: 8.9pt;
+            line-height: 1.4;
+        }
+
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 9px;
+            border-bottom: 1.5px solid #e2e8f0;
+            margin-bottom: 9px;
+        }
+
+        .header-left {
+            flex: 1;
+            padding-right: 15px;
+        }
+
+        .name {
+            font-size: 21.5pt;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+
+        .title {
+            font-size: 11pt;
+            font-weight: 700;
+            color: #4338ca;
+            margin-bottom: 4px;
+        }
+
+        .tagline {
+            font-size: 7.9pt;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.1px;
+            white-space: nowrap;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2.5px;
+            font-size: 7.9pt;
+            color: #475569;
+            white-space: nowrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .contact-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .contact-link {
+            color: #4338ca;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .qr-code {
+            width: 58px;
+            height: 58px;
+            border-radius: 4px;
+            border: 1px solid #cbd5e1;
+            padding: 2px;
+            background: #ffffff;
+        }
+
+        .qr-label {
+            font-size: 5.5pt;
+            font-weight: 700;
+            color: #4338ca;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        /* Section Headings */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 8.9pt;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 9px;
+            margin-bottom: 5px;
+        }
+
+        .section-bar {
+            width: 4px;
+            height: 12px;
+            background: #4f46e5;
+            border-radius: 2px;
+        }
+
+        /* Summary */
+        .summary-text {
+            font-size: 8.35pt;
+            color: #334155;
+            line-height: 1.42;
+            text-align: justify;
+        }
+
+        /* Experience */
+        .experience-item {
+            margin-bottom: 8px;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 3px;
+        }
+
+        .job-title-company {
+            font-size: 9pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .job-company {
+            color: #4338ca;
+            font-weight: 700;
+        }
+
+        .job-location {
+            font-size: 8pt;
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .job-date {
+            font-size: 8pt;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1px;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 13px;
+            margin-bottom: 2.5px;
+            font-size: 8.15pt;
+            color: #334155;
+            line-height: 1.38;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            position: absolute;
+            left: 2px;
+            color: #4f46e5;
+            font-weight: bold;
+            font-size: 9pt;
+        }
+
+        /* Skills Grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 7px;
+            margin-bottom: 7px;
+        }
+
+        .skill-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 6px 9px;
+        }
+
+        .skill-category {
+            font-size: 7.7pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 2.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            letter-spacing: 0.2px;
+        }
+
+        .skill-tags {
+            font-size: 7.55pt;
+            color: #475569;
+            line-height: 1.32;
+        }
+
+        .skill-tags strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        /* Projects */
+        .project-item {
+            margin-bottom: 7px;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .project-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .project-title {
+            font-size: 8.7pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .project-link-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #eef2ff;
+            color: #4338ca;
+            border: 1px solid #c7d2fe;
+            border-radius: 4px;
+            padding: 1.5px 6.5px;
+            font-size: 7pt;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .project-link-badge:hover {
+            background: #4338ca;
+            color: #ffffff;
+        }
+
+        .project-stack {
+            display: inline-flex;
+            gap: 4px;
+        }
+
+        .stack-pill {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 3px;
+            padding: 1px 5.5px;
+            font-size: 7pt;
+            font-weight: 600;
+        }
+
+        /* Education & Additional Details */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1.15fr 0.95fr;
+            gap: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 11px;
+            margin-top: 6px;
+        }
+
+        .bottom-col-title {
+            font-size: 7.4pt;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 3px;
+        }
+
+        .bottom-entry-main {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #1e293b;
+            line-height: 1.25;
+        }
+
+        .bottom-entry-sub {
+            font-size: 7.4pt;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="name">Debanjan Pal</h1>
+            <div class="title">Senior Game Developer | VR &amp; XR Specialist</div>
+            <div class="tagline">4.5+ Years Exp • Unity 2D/3D • Meta Quest VR • C# Architecture • Motion Sensors</div>
+        </div>
+        <div class="header-right">
+            <div class="contact-details">
+                <div class="contact-item">
+                    <span class="contact-label">Phone:</span>
+                    <a class="contact-link" href="tel:+919641042593">+91 9641042593</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Email:</span>
+                    <a class="contact-link" href="mailto:debanjanpal59@gmail.com">debanjanpal59@gmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Location:</span>
+                    <span style="color: #1e293b; font-weight: 600;">Bengaluru, India</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Portfolio:</span>
+                    <a class="contact-link" href="https://debanjanpall.github.io/" target="_blank">debanjanpall.github.io</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">LinkedIn:</span>
+                    <a class="contact-link" href="https://www.linkedin.com/in/debanjanpal/" target="_blank">linkedin.com/in/debanjanpal</a>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">GitLab:</span>
+                    <a class="contact-link" href="https://gitlab.com/debanjan-portfolio" target="_blank">gitlab.com/debanjan-portfolio</a>
+                </div>
+            </div>
+            <div class="qr-container">
+                <img class="qr-code" src="portfolio-qr.svg" alt="Portfolio QR Code">
+                <span class="qr-label">Scan Portfolio</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Professional Summary -->
+    <section>
+        <div class="section-title">
+            <span class="section-bar"></span>
+            Professional Summary
+        </div>
+        <p class="summary-text">
+            Results-driven <strong>Senior Game Developer</strong> with <strong>4.5+ years</strong> of professional industry experience architecting high-performance 2D/3D games, virtual reality medical simulations, and custom hardware motion-control systems. Highly proficient in Unity (URP, Physics, Cinemachine), clean decoupled C# architecture, and Meta Quest 2/3/3S deployment. Recognized for rapid gameplay prototyping, optimizing memory/draw calls for locked high frame rates, and delivering immersive interactive applications from concept to production.
+        </p>
+    </section>
+
+    <!-- Professional Experience -->
+    <section>
+        <div class="section-title">
+            <span class="section-bar"></span>
+            Professional Experience
+        </div>
+
+        <!-- Equidor Medtech -->
+        <div class="experience-item">
+            <div class="job-header">
+                <div>
+                    <span class="job-title-company">Senior Game Developer — <span class="job-company">Equidor Medtech</span></span>
+                    <span class="job-location">| Bengaluru, India</span>
+                </div>
+                <span class="job-date">April 2024 – Present</span>
+            </div>
+            <ul class="bullet-list">
+                <li>Lead gameplay programming for cross-platform 2D/3D titles and interactive VR experiences, driving core loops from whitebox to release with sustained 60+ FPS stability.</li>
+                <li>Architect specialized applications interfacing directly with proprietary motion-based sensor hardware and custom controllers, cutting input latency across platforms.</li>
+                <li>Champion clean engineering workflows, sprint planning, peer code reviews, profiling, and memory optimization across devices, minimizing crashes and draw calls.</li>
+            </ul>
+        </div>
+
+        <!-- Cyclops Medtech -->
+        <div class="experience-item">
+            <div class="job-header">
+                <div>
+                    <span class="job-title-company">Associate Software Developer — <span class="job-company">Cyclops Medtech</span></span>
+                    <span class="job-location">| Bengaluru, India</span>
+                </div>
+                <span class="job-date">Jan 2022 – March 2024 (2 yrs 3 mos)</span>
+            </div>
+            <ul class="bullet-list">
+                <li>Engineered, optimized, and shipped medical-grade diagnostic VR applications targeting Meta Quest 2 (Android/XR Toolkit), consistently sustaining 72/90 FPS.</li>
+                <li>Analyzed telemetry data, diagnostic sensor logs, and system crash dumps to identify technical bottlenecks, accelerate bug resolution, and maintain peak stability.</li>
+                <li>Collaborated closely with product owners and clinicians to translate complex clinical protocols into intuitive, gamified patient tests across multiple hardware iterations.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Technical Skills & Arsenal -->
+    <section>
+        <div class="section-title">
+            <span class="section-bar"></span>
+            Technical Skills &amp; Arsenal
+        </div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-category">GAME DEV &amp; ENGINES</div>
+                <div class="skill-tags">
+                    <strong>Unity (2D/3D)</strong>, Universal Render Pipeline (URP), 2D/3D Physics, Cinemachine, UI Toolkit &amp; Canvas, Mecanim Animation, Particle Systems.
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-category">VR &amp; HARDWARE SYSTEMS</div>
+                <div class="skill-tags">
+                    <strong>Meta Quest 2 / 3 / 3S</strong>, XR Interaction Toolkit, Motion Sensors, Spatial 6DoF Tracking, Custom Controllers, Medical-Grade VR, Telemetry.
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-category">LANGUAGES &amp; ARCHITECTURE</div>
+                <div class="skill-tags">
+                    <strong>C# (.NET)</strong>, Design Patterns, State Machines (FSM), Object Pooling, Observer/Events, Data Structures, Decoupled Clean Architecture.
+                </div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-category">TOOLS &amp; 3D CREATION</div>
+                <div class="skill-tags">
+                    <strong>Blender 3D</strong>, Photoshop, Git / GitLab / GitHub, Unity Profiler, Memory Optimization, Draw Call Batching, JIRA &amp; Agile.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Projects -->
+    <section>
+        <div class="section-title">
+            <span class="section-bar"></span>
+            Featured Production &amp; Portfolio Projects
+        </div>
+
+        <!-- Project 1 -->
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title-wrap">
+                    <span class="project-title">Animal Swipe — Mobile Gesture &amp; Reflex Arcade</span>
+                    <a class="project-link-badge" href="https://debanjanpall.github.io/#projects" target="_blank">Demo / Code ↗</a>
+                </div>
+                <div class="project-stack">
+                    <span class="stack-pill">Unity</span>
+                    <span class="stack-pill">C#</span>
+                    <span class="stack-pill">Touch Gestures</span>
+                    <span class="stack-pill">Mobile</span>
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Engineered responsive multi-touch swipe mechanics with gesture recognition, combo scoring, and object pooling tailored for locked 60 FPS mobile performance.</li>
+            </ul>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title-wrap">
+                    <span class="project-title">Asteroid Run — 3D Space Obstacle Runner</span>
+                    <a class="project-link-badge" href="https://debanjanpall.github.io/#projects" target="_blank">Demo / Code ↗</a>
+                </div>
+                <div class="project-stack">
+                    <span class="stack-pill">Unity 3D</span>
+                    <span class="stack-pill">C#</span>
+                    <span class="stack-pill">Procedural Spawning</span>
+                    <span class="stack-pill">Physics</span>
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Built procedural endless asteroid generation with progressive velocity curves, optimized collision matrices, and draw call batching for smooth frame rates.</li>
+            </ul>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title-wrap">
+                    <span class="project-title">Teddy Dispatcher — 3D Physics &amp; Queue Simulation</span>
+                    <a class="project-link-badge" href="https://debanjanpall.github.io/#projects" target="_blank">Demo / Code ↗</a>
+                </div>
+                <div class="project-stack">
+                    <span class="stack-pill">Unity 3D</span>
+                    <span class="stack-pill">C#</span>
+                    <span class="stack-pill">FSM State Machine</span>
+                    <span class="stack-pill">Physics</span>
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Architected an event-driven dispatch loop using State Machines (FSM) to manage dynamic entity routing, sorting queues, and real-time rigid-body interactions.</li>
+            </ul>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-item">
+            <div class="project-header">
+                <div class="project-title-wrap">
+                    <span class="project-title">Walk &amp; Dodge — 3D Obstacle Course Platformer</span>
+                    <a class="project-link-badge" href="https://debanjanpall.github.io/#projects" target="_blank">Demo / Code ↗</a>
+                </div>
+                <div class="project-stack">
+                    <span class="stack-pill">Unity 3D</span>
+                    <span class="stack-pill">C#</span>
+                    <span class="stack-pill">Physics</span>
+                    <span class="stack-pill">Cinemachine</span>
+                </div>
+            </div>
+            <ul class="bullet-list">
+                <li>Engineered 3D obstacle avoidance with dynamic hazards, responsive character physics, Cinemachine tracking, and zero-allocation object pooling locking 60 FPS.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Education, Credentials & Spoken Languages -->
+    <section>
+        <div class="section-title">
+            <span class="section-bar"></span>
+            Education, Credentials &amp; Languages
+        </div>
+        <div class="bottom-grid">
+            <div>
+                <div class="bottom-col-title">Degree</div>
+                <div class="bottom-entry-main">BCA in Game &amp; Mobile App Development</div>
+                <div class="bottom-entry-sub">
+                    <span>CMR University, Bangalore</span>
+                    <span>2019 – 2022</span>
+                </div>
+            </div>
+            <div>
+                <div class="bottom-col-title">Certification</div>
+                <div class="bottom-entry-main">VR Development Fundamentals in Unity</div>
+                <div class="bottom-entry-sub">
+                    <span>Udemy Professional Credential</span>
+                    <span>2022</span>
+                </div>
+            </div>
+            <div>
+                <div class="bottom-col-title">Spoken Languages</div>
+                <div class="bottom-entry-main" style="font-weight: 500; font-size: 7.8pt; color: #334155; margin-top: 1px;">
+                    <strong>English</strong> (Professional)<br>
+                    <strong>Hindi</strong> (Fluent) • <strong>Bengali</strong> (Native)
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
