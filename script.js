@@ -97,8 +97,16 @@ async function loadProjects() {
             return;
         }
 
-        // Sort projects in reverse alphabetical order (Z to A)
-        projects.sort((a, b) => b.title.localeCompare(a.title));
+        const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
+
+        // Sort projects with Asteroid Run pinned first, then reverse alphabetical order (Z to A)
+        projects.sort((a, b) => {
+            const aIsAsteroid = a.title && a.title.toLowerCase().includes('asteroid');
+            const bIsAsteroid = b.title && b.title.toLowerCase().includes('asteroid');
+            if (aIsAsteroid) return -1;
+            if (bIsAsteroid) return 1;
+            return b.title.localeCompare(a.title);
+        });
 
         projectGrid.innerHTML = '';
         
@@ -106,9 +114,12 @@ async function loadProjects() {
         const fragment = document.createDocumentFragment();
         
         projects.forEach((project, index) => {
+            const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
             const projectCard = document.createElement('div');
-            // Add opacity-0 and translate-y-5 for the reveal animation. Increased duration for a smoother effect.
-            projectCard.className = 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer';
+            // Add opacity-0 and translate-y-5 for reveal animation. Add glowing border for Asteroid Run.
+            projectCard.className = isAsteroid
+                ? 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer relative border-2 border-emerald-500/50 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+                : 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer';
 
             let mediaHtml = '';
             if (project.gifUrl) {
@@ -122,18 +133,50 @@ async function loadProjects() {
             }
 
             // Check for description content, fallback if not found
-            const descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
+            let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
+            if (isAsteroid && !project.description) {
+                descriptionText = 'Fast-paced 3D arcade space runner published on Google Play. Navigate dense asteroid fields with procedural obstacle generation, progressive velocity curves, and responsive touch controls.';
+            }
+
+            let featuredBadgeHtml = '';
+            let actionButtonsHtml = `
+                <div class="mt-auto">
+                    <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center text-sm">
+                        Open Folder <span class="ml-1">→</span>
+                    </a>
+                </div>
+            `;
+
+            if (isAsteroid) {
+                featuredBadgeHtml = `
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                            LIVE ON GOOGLE PLAY
+                        </span>
+                        <span class="text-xs text-neutral-400 font-medium">Android Mobile</span>
+                    </div>
+                `;
+                actionButtonsHtml = `
+                    <div class="mt-auto pt-4 flex items-center justify-between gap-3 border-t border-white/10">
+                        <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/30 transform hover:scale-105" onclick="event.stopPropagation()">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                            Play Store ↗
+                        </a>
+                        <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white text-xs font-medium inline-flex items-center">
+                            Folder <span class="ml-1">→</span>
+                        </a>
+                    </div>
+                `;
+            }
 
             projectCard.innerHTML = `
                 <div class="flex flex-col flex-grow">
+                    ${featuredBadgeHtml}
                     ${mediaHtml}
                     <h3 class="text-xl font-semibold text-white mb-2">${project.title}</h3>
                     <p class="text-neutral-400 mb-4 text-sm flex-grow line-clamp-3" title="${descriptionText.replace(/"/g, '&quot;')}">${descriptionText}</p>
-                    <div class="mt-auto">
-                        <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center">
-                            Open Folder <span class="ml-1">→</span>
-                        </a>
-                    </div>
+                    ${actionButtonsHtml}
                 </div>
             `;
 
@@ -259,15 +302,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        const descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
+        const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
+        const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
+
+        let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
+        if (isAsteroid && !project.description) {
+            descriptionText = 'Fast-paced 3D arcade space runner published on Google Play. Navigate dense asteroid fields with procedural obstacle generation, progressive velocity curves, and responsive touch controls.';
+        }
+
+        let badgeHtml = '';
+        let modalActionsHtml = `
+            <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center text-sm">
+                Open Folder <span class="ml-1">→</span>
+            </a>
+        `;
+
+        if (isAsteroid) {
+            badgeHtml = `
+                <div class="mb-3">
+                    <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
+                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                        OFFICIAL RELEASE • LIVE ON GOOGLE PLAY
+                    </span>
+                </div>
+            `;
+            modalActionsHtml = `
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-6 py-3 rounded-lg inline-flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all transform hover:scale-105">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                        Get it on Google Play Store ↗
+                    </a>
+                    <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-300 hover:text-white font-semibold inline-flex items-center text-sm border border-neutral-700 hover:border-neutral-500 px-4 py-3 rounded-lg transition-all">
+                        Open Project Folder <span class="ml-1">→</span>
+                    </a>
+                </div>
+            `;
+        }
 
         modalContentWrapper.innerHTML = `
+            ${badgeHtml}
             <h3 id="modal-title" class="text-3xl font-bold text-white mb-4">${project.title}</h3>
             ${modalMediaHtml}
             <p class="text-neutral-300 mb-8 whitespace-pre-wrap">${descriptionText}</p>
-            <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center">
-                Open Folder <span class="ml-1">→</span>
-            </a>
+            ${modalActionsHtml}
         `;
         // Scroll to top of modal content on navigation
         modalContentWrapper.scrollTop = 0;
