@@ -55,7 +55,7 @@ async function loadProjects() {
     const projectGrid = document.getElementById('project-grid');
     
     const GOOGLE_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbyNGEFosJG4rEo1RvjXkIo0DxH9-LiJ_xeS1MJwmtS3XS4f6VRiHUbuwRRdH3fp1Htr/exec';
-    const CACHE_KEY = 'portfolio_projects_data';
+    const CACHE_KEY = 'portfolio_projects_data_v2';
     
     try {
         let projects;
@@ -127,15 +127,16 @@ async function loadProjects() {
                 
                 if (fileIdMatch && fileIdMatch[1]) {
                     const fileId = fileIdMatch[1];
-                    const directVideoUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
-                    mediaHtml = `<video data-src="${directVideoUrl}" data-file-id="${fileId}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline></video>`;
+                    const directVideoUrl = `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`;
+                    const posterUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+                    mediaHtml = `<video data-src="${directVideoUrl}" data-file-id="${fileId}" poster="${posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline preload="none"></video>`;
                 }
             }
 
             // Check for description content, fallback if not found
             let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
-            if (isAsteroid && !project.description) {
-                descriptionText = 'Fast-paced 3D arcade space runner published on Google Play. Navigate dense asteroid fields with procedural obstacle generation, progressive velocity curves, and responsive touch controls.';
+            if (isAsteroid) {
+                descriptionText = 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.';
             }
 
             let featuredBadgeHtml = '';
@@ -288,7 +289,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileIdMatch = project.gifUrl.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
             if (fileIdMatch && fileIdMatch[1]) {
                 const fileId = fileIdMatch[1];
-                const directVideoUrl = `https://drive.google.com/uc?export=download&id=${fileId}`;
+                const directVideoUrl = `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`;
+                const posterUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
                 modalMediaHtml = `
                     <div class="relative w-full flex justify-center items-center bg-black/20 rounded-lg mb-6 min-h-[12rem]">
                         <!-- Loading Spinner -->
@@ -296,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="w-10 h-10 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
                         </div>
                         <!-- Video -->
-                        <video src="${directVideoUrl}" data-file-id="${fileId}" alt="${project.title} Preview" class="w-full h-auto max-h-[60vh] object-contain rounded-lg relative z-10 opacity-0 transition-opacity duration-500" loop muted autoplay playsinline oncanplay="this.previousElementSibling.classList.add('hidden'); this.classList.remove('opacity-0');"></video>
+                        <video src="${directVideoUrl}" data-file-id="${fileId}" poster="${posterUrl}" alt="${project.title} Preview" class="w-full h-auto max-h-[60vh] object-contain rounded-lg relative z-10 opacity-0 transition-opacity duration-500" loop muted autoplay playsinline oncanplay="this.previousElementSibling.classList.add('hidden'); this.classList.remove('opacity-0');"></video>
                     </div>
                 `;
             }
@@ -306,8 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
 
         let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
-        if (isAsteroid && !project.description) {
-            descriptionText = 'Fast-paced 3D arcade space runner published on Google Play. Navigate dense asteroid fields with procedural obstacle generation, progressive velocity curves, and responsive touch controls.';
+        if (isAsteroid) {
+            descriptionText = 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.';
         }
 
         let badgeHtml = '';
