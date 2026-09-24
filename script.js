@@ -50,12 +50,48 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// Local high-performance WebM video assets converted for ultra-fast, smooth 60fps playback without Google Drive 403 cross-site blocks
+const LOCAL_WEBM_VIDEOS = {
+    'asteroid run': 'assets/videos/asteroid-run.webm',
+    'bird runner': 'assets/videos/bird-runner.webm',
+    'bergmann': 'assets/videos/bergmann.webm',
+    'animal swipe': 'assets/videos/animal-swipe.webm'
+};
+
+function getProjectMediaInfo(project) {
+    const title = project.title ? project.title.toLowerCase().trim() : '';
+    let webmSrc = null;
+    for (const [key, path] of Object.entries(LOCAL_WEBM_VIDEOS)) {
+        if (title.includes(key)) {
+            webmSrc = path;
+            break;
+        }
+    }
+
+    let fileId = null;
+    if (project.gifUrl) {
+        const fileIdMatch = project.gifUrl.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
+        if (fileIdMatch && fileIdMatch[1]) {
+            fileId = fileIdMatch[1];
+        }
+    }
+
+    const posterUrl = fileId ? `https://lh3.googleusercontent.com/d/${fileId}` : '';
+
+    return {
+        isWebm: !!webmSrc,
+        videoSrc: webmSrc,
+        fileId: fileId,
+        posterUrl: posterUrl
+    };
+}
+
 // --- Load Projects ---
 async function loadProjects() {
     const projectGrid = document.getElementById('project-grid');
     
     const GOOGLE_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbyNGEFosJG4rEo1RvjXkIo0DxH9-LiJ_xeS1MJwmtS3XS4f6VRiHUbuwRRdH3fp1Htr/exec';
-    const CACHE_KEY = 'portfolio_projects_data_v2';
+    const CACHE_KEY = 'portfolio_projects_data_v3';
     
     try {
         let projects;
@@ -121,16 +157,12 @@ async function loadProjects() {
                 ? 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer relative border-2 border-emerald-500/50 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/30'
                 : 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer';
 
+            const media = getProjectMediaInfo(project);
             let mediaHtml = '';
-            if (project.gifUrl) {
-                const fileIdMatch = project.gifUrl.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
-                
-                if (fileIdMatch && fileIdMatch[1]) {
-                    const fileId = fileIdMatch[1];
-                    const directVideoUrl = `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`;
-                    const posterUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
-                    mediaHtml = `<video data-src="${directVideoUrl}" data-file-id="${fileId}" poster="${posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline preload="none"></video>`;
-                }
+            if (media.isWebm) {
+                mediaHtml = `<video data-src="${media.videoSrc}" poster="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline preload="none"></video>`;
+            } else if (media.posterUrl) {
+                mediaHtml = `<img src="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loading="lazy">`;
             }
 
             // Check for description content, fallback if not found
@@ -284,24 +316,30 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndexForModal = index;
         const project = projectsForModal[index];
 
+        const media = getProjectMediaInfo(project);
         let modalMediaHtml = '';
-        if (project.gifUrl) {
-            const fileIdMatch = project.gifUrl.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
-            if (fileIdMatch && fileIdMatch[1]) {
-                const fileId = fileIdMatch[1];
-                const directVideoUrl = `https://drive.usercontent.google.com/download?id=${fileId}&export=download&confirm=t`;
-                const posterUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
-                modalMediaHtml = `
-                    <div class="relative w-full flex justify-center items-center bg-black/20 rounded-lg mb-6 min-h-[12rem]">
-                        <!-- Loading Spinner -->
-                        <div class="absolute flex justify-center items-center pointer-events-none">
-                            <div class="w-10 h-10 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
-                        </div>
-                        <!-- Video -->
-                        <video src="${directVideoUrl}" data-file-id="${fileId}" poster="${posterUrl}" alt="${project.title} Preview" class="w-full h-auto max-h-[60vh] object-contain rounded-lg relative z-10 opacity-0 transition-opacity duration-500" loop muted autoplay playsinline oncanplay="this.previousElementSibling.classList.add('hidden'); this.classList.remove('opacity-0');"></video>
+        if (media.isWebm) {
+            modalMediaHtml = `
+                <div class="relative w-full flex justify-center items-center bg-black/20 rounded-lg mb-6 min-h-[12rem]">
+                    <!-- Loading Spinner -->
+                    <div class="absolute flex justify-center items-center pointer-events-none">
+                        <div class="w-10 h-10 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
                     </div>
-                `;
-            }
+                    <!-- Video -->
+                    <video src="${media.videoSrc}" poster="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-auto max-h-[60vh] object-contain rounded-lg relative z-10 opacity-0 transition-opacity duration-500" loop muted autoplay playsinline oncanplay="this.previousElementSibling.classList.add('hidden'); this.classList.remove('opacity-0');"></video>
+                </div>
+            `;
+        } else if (media.posterUrl) {
+            modalMediaHtml = `
+                <div class="relative w-full flex justify-center items-center bg-black/20 rounded-lg mb-6 min-h-[12rem]">
+                    <!-- Loading Spinner -->
+                    <div class="absolute flex justify-center items-center pointer-events-none">
+                        <div class="w-10 h-10 border-4 border-neutral-700 border-t-indigo-500 rounded-full animate-spin"></div>
+                    </div>
+                    <!-- Image / GIF -->
+                    <img src="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-auto max-h-[60vh] object-contain rounded-lg relative z-10 opacity-0 transition-opacity duration-500" onload="this.previousElementSibling.classList.add('hidden'); this.classList.remove('opacity-0');">
+                </div>
+            `;
         }
 
         const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
@@ -458,13 +496,16 @@ if (closeThankYouBtn) {
     });
 }
 
-// Global error listener to handle video to image fallback (e.g. if the video fails to load, falls back to the original GIF)
+// Global error listener to handle video to image fallback (e.g. if a video fails to load, falls back to the poster or preview)
 document.addEventListener('error', function (e) {
     const target = e.target;
-    if (target.tagName === 'VIDEO' && target.dataset.fileId) {
-        const fileId = target.dataset.fileId;
+    if (target.tagName === 'VIDEO' && !target.dataset.hasFailed) {
+        target.dataset.hasFailed = 'true';
+        const fallbackSrc = target.poster || (target.dataset.fileId ? `https://lh3.googleusercontent.com/d/${target.dataset.fileId}` : '');
+        if (!fallbackSrc) return;
+
         const imgEl = document.createElement('img');
-        imgEl.src = `https://lh3.googleusercontent.com/d/${fileId}`;
+        imgEl.src = fallbackSrc;
         imgEl.alt = target.alt || "Preview";
         imgEl.className = target.className;
 
