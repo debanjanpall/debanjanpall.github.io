@@ -86,6 +86,16 @@ function getProjectMediaInfo(project) {
     };
 }
 
+// Authentic, sharp, 4-color Google Play Store SVG icon (no overlapping glitch artifacts)
+const getGooglePlaySvg = (sizeClass = 'w-4 h-4') => `
+<svg class="${sizeClass} flex-shrink-0" viewBox="0 0 466 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#EA4335" d="M199.9 237.8 1.4 470.17c7.22 24.57 30.16 41.81 55.8 41.81 11.16 0 20.93-2.79 29.3-8.37l244.16-139.46L199.9 237.8z"/>
+    <path fill="#FBBC04" d="m433.91 205.1-104.65-60-111.61 110.22 113.01 108.83 104.64-58.6c18.14-9.77 30.7-29.3 30.7-50.23-1.4-20.93-13.95-40.46-32.09-50.22z"/>
+    <path fill="#34A853" d="M199.42 273.45 329.27 145.1 87.9 8.37C79.53 2.79 68.36 0 57.2 0 30.7 0 6.98 18.14 1.4 41.86l198.02 231.59z"/>
+    <path fill="#4285F4" d="M1.39 41.86C0 46.04 0 51.63 0 57.2v397.64c0 5.57 0 9.76 1.4 15.34l216.27-214.86L1.39 41.86z"/>
+</svg>
+`;
+
 // --- Load Projects ---
 async function loadProjects() {
     const projectGrid = document.getElementById('project-grid');
@@ -184,7 +194,7 @@ async function loadProjects() {
                 featuredBadgeHtml = `
                     <div class="flex items-center justify-between mb-3">
                         <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
-                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                            ${getGooglePlaySvg('w-3.5 h-3.5')}
                             LIVE ON GOOGLE PLAY
                         </span>
                         <span class="text-xs text-neutral-400 font-medium">Android Mobile</span>
@@ -193,7 +203,7 @@ async function loadProjects() {
                 actionButtonsHtml = `
                     <div class="mt-auto pt-4 flex items-center justify-between gap-3 border-t border-white/10">
                         <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/30 transform hover:scale-105" onclick="event.stopPropagation()">
-                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                            ${getGooglePlaySvg('w-3.5 h-3.5')}
                             Play Store ↗
                         </a>
                         <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white text-xs font-medium inline-flex items-center">
@@ -361,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
             badgeHtml = `
                 <div class="mb-3">
                     <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                        ${getGooglePlaySvg('w-3.5 h-3.5')}
                         OFFICIAL RELEASE • LIVE ON GOOGLE PLAY
                     </span>
                 </div>
@@ -369,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modalActionsHtml = `
                 <div class="flex flex-wrap items-center gap-4">
                     <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-6 py-3 rounded-lg inline-flex items-center gap-2 shadow-lg shadow-emerald-600/30 transition-all transform hover:scale-105">
-                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M3.609 1.814L13.793 12 3.61 22.186a1.597 1.597 0 0 1-.61-.926V2.74c0-.36.216-.7.609-.926zm11.24 11.24l2.42 2.42-12.04 6.963 9.62-9.383zm0-2.108L5.23 1.563l12.04 6.963-2.42 2.42zm1.488 1.054l3.528 2.04c1.134.656 1.134 1.724 0 2.38l-3.528 2.04-2.112-2.112 2.112-2.348z"/></svg>
+                        ${getGooglePlaySvg('w-5 h-5')}
                         Get it on Google Play Store ↗
                     </a>
                     <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-300 hover:text-white font-semibold inline-flex items-center text-sm border border-neutral-700 hover:border-neutral-500 px-4 py-3 rounded-lg transition-all">
