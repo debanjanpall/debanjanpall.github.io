@@ -55,7 +55,10 @@ const LOCAL_WEBM_VIDEOS = {
     'asteroid run': 'assets/videos/asteroid-run.webm',
     'bird runner': 'assets/videos/bird-runner.webm',
     'bergmann': 'assets/videos/bergmann.webm',
-    'animal swipe': 'assets/videos/animal-swipe.webm'
+    'animal swipe': 'assets/videos/animal-swipe.webm',
+    'walk & dodge': 'assets/videos/walk-and-dodge.webm',
+    'walk and dodge': 'assets/videos/walk-and-dodge.webm',
+    'teddy dispatcher': 'assets/videos/teddy-dispatcher.webm'
 };
 
 function getProjectMediaInfo(project) {
@@ -97,185 +100,204 @@ const getGooglePlaySvg = (sizeClass = 'w-4 h-4') => `
 `;
 
 // --- Load Projects ---
-async function loadProjects() {
+// Helper to render project cards into the grid
+function renderProjectCards(projects) {
     const projectGrid = document.getElementById('project-grid');
-    
-    const GOOGLE_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbyNGEFosJG4rEo1RvjXkIo0DxH9-LiJ_xeS1MJwmtS3XS4f6VRiHUbuwRRdH3fp1Htr/exec';
-    const CACHE_KEY = 'portfolio_projects_data_v3';
-    
-    try {
-        let projects;
-        const cachedData = sessionStorage.getItem(CACHE_KEY);
+    if (!projectGrid) return;
 
-        // 1. Use cached data if available to instantly load projects
-        if (cachedData) {
-            projects = JSON.parse(cachedData);
-        } else {
-            // Show a skeleton loading animation while fetching data from the API
-            const skeletonCards = Array(6).fill('').map(() => `
-                <div class="glass-effect rounded-xl overflow-hidden flex flex-col p-6 animate-pulse border border-white/5">
-                    <div class="w-full h-48 bg-gray-600/20 rounded-lg mb-4"></div>
-                    <div class="h-6 bg-gray-600/20 rounded w-2/3 mb-2"></div>
-                    <div class="h-4 bg-gray-600/20 rounded w-full mb-1 flex-grow"></div>
-                    <div class="h-4 bg-gray-600/20 rounded w-4/5 mb-4"></div>
-                    <div class="mt-auto h-4 bg-gray-600/20 rounded w-1/3"></div>
+    if (!Array.isArray(projects) || projects.length === 0) {
+        projectGrid.innerHTML = '<p class="text-neutral-400 col-span-full text-center">No projects to display at the moment.</p>';
+        return;
+    }
+
+    const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
+
+    // Sort projects with Asteroid Run pinned first, then reverse alphabetical order (Z to A)
+    const sortedProjects = [...projects].sort((a, b) => {
+        const aIsAsteroid = a.title && a.title.toLowerCase().includes('asteroid');
+        const bIsAsteroid = b.title && b.title.toLowerCase().includes('asteroid');
+        if (aIsAsteroid) return -1;
+        if (bIsAsteroid) return 1;
+        return (b.title || '').localeCompare(a.title || '');
+    });
+
+    projectGrid.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    sortedProjects.forEach((project, index) => {
+        const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
+        const projectCard = document.createElement('div');
+        projectCard.className = isAsteroid
+            ? 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer relative border-2 border-emerald-500/50 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/30'
+            : 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer';
+
+        const media = getProjectMediaInfo(project);
+        let mediaHtml = '';
+        if (media.isWebm) {
+            mediaHtml = `<video data-src="${media.videoSrc}" poster="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline preload="none"></video>`;
+        } else if (media.posterUrl) {
+            mediaHtml = `<img src="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loading="lazy">`;
+        }
+
+        // Prioritize description from Google Drive first, fallback only if empty
+        const descriptionText = (project.description && project.description.trim())
+            ? project.description.trim()
+            : (isAsteroid
+                ? 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.'
+                : 'Project folder loaded from Google Drive.');
+
+        let featuredBadgeHtml = '';
+        let actionButtonsHtml = `
+            <div class="mt-auto">
+                <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center text-sm">
+                    Open Folder <span class="ml-1">→</span>
+                </a>
+            </div>
+        `;
+
+        if (isAsteroid) {
+            featuredBadgeHtml = `
+                <div class="flex items-center justify-between mb-3">
+                    <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                        ${getGooglePlaySvg('w-3.5 h-3.5')}
+                        LIVE ON GOOGLE PLAY
+                    </span>
+                    <span class="text-xs text-neutral-400 font-medium">Android Mobile</span>
                 </div>
-            `).join('');
-            projectGrid.innerHTML = skeletonCards;
-
-            const response = await fetch(GOOGLE_DRIVE_API_URL);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            projects = await response.json();
-            
-            if (projects.error) {
-                throw new Error(`Google Apps Script Error: ${projects.error}`);
-            }
-            
-            sessionStorage.setItem(CACHE_KEY, JSON.stringify(projects));
-        }
-
-        if (!Array.isArray(projects) || projects.length === 0) {
-            projectGrid.innerHTML = '<p class="text-neutral-400 col-span-full text-center">No projects to display at the moment.</p>';
-            return;
-        }
-
-        const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
-
-        // Sort projects with Asteroid Run pinned first, then reverse alphabetical order (Z to A)
-        projects.sort((a, b) => {
-            const aIsAsteroid = a.title && a.title.toLowerCase().includes('asteroid');
-            const bIsAsteroid = b.title && b.title.toLowerCase().includes('asteroid');
-            if (aIsAsteroid) return -1;
-            if (bIsAsteroid) return 1;
-            return b.title.localeCompare(a.title);
-        });
-
-        projectGrid.innerHTML = '';
-        
-        // 2. Use a DocumentFragment to minimize DOM repaints
-        const fragment = document.createDocumentFragment();
-        
-        projects.forEach((project, index) => {
-            const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
-            const projectCard = document.createElement('div');
-            // Add opacity-0 and translate-y-5 for reveal animation. Add glowing border for Asteroid Run.
-            projectCard.className = isAsteroid
-                ? 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer relative border-2 border-emerald-500/50 shadow-xl shadow-emerald-500/10 ring-1 ring-emerald-500/30'
-                : 'project-card glass-effect rounded-xl overflow-hidden transform hover:-translate-y-2 transition-all duration-500 flex flex-col p-6 opacity-0 translate-y-5 cursor-pointer';
-
-            const media = getProjectMediaInfo(project);
-            let mediaHtml = '';
-            if (media.isWebm) {
-                mediaHtml = `<video data-src="${media.videoSrc}" poster="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loop muted playsinline preload="none"></video>`;
-            } else if (media.posterUrl) {
-                mediaHtml = `<img src="${media.posterUrl}" alt="${project.title} Preview" class="w-full h-48 object-cover rounded-lg mb-4 shadow-sm shadow-indigo-500/10" loading="lazy">`;
-            }
-
-            // Check for description content, fallback if not found
-            let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
-            if (isAsteroid) {
-                descriptionText = 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.';
-            }
-
-            let featuredBadgeHtml = '';
-            let actionButtonsHtml = `
-                <div class="mt-auto">
-                    <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center text-sm">
-                        Open Folder <span class="ml-1">→</span>
+            `;
+            actionButtonsHtml = `
+                <div class="mt-auto pt-4 flex items-center justify-between gap-3 border-t border-white/10">
+                    <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/30 transform hover:scale-105" onclick="event.stopPropagation()">
+                        ${getGooglePlaySvg('w-3.5 h-3.5')}
+                        Play Store ↗
+                    </a>
+                    <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white text-xs font-medium inline-flex items-center">
+                        Folder <span class="ml-1">→</span>
                     </a>
                 </div>
             `;
-
-            if (isAsteroid) {
-                featuredBadgeHtml = `
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
-                            ${getGooglePlaySvg('w-3.5 h-3.5')}
-                            LIVE ON GOOGLE PLAY
-                        </span>
-                        <span class="text-xs text-neutral-400 font-medium">Android Mobile</span>
-                    </div>
-                `;
-                actionButtonsHtml = `
-                    <div class="mt-auto pt-4 flex items-center justify-between gap-3 border-t border-white/10">
-                        <a href="${ASTEROID_PLAY_STORE_URL}" target="_blank" rel="noopener noreferrer" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg inline-flex items-center gap-1.5 transition-all shadow-md shadow-emerald-600/30 transform hover:scale-105" onclick="event.stopPropagation()">
-                            ${getGooglePlaySvg('w-3.5 h-3.5')}
-                            Play Store ↗
-                        </a>
-                        <a href="${project.url}" target="_blank" rel="noopener noreferrer" class="text-neutral-400 hover:text-white text-xs font-medium inline-flex items-center">
-                            Folder <span class="ml-1">→</span>
-                        </a>
-                    </div>
-                `;
-            }
-
-            projectCard.innerHTML = `
-                <div class="flex flex-col flex-grow">
-                    ${featuredBadgeHtml}
-                    ${mediaHtml}
-                    <h3 class="text-xl font-semibold text-white mb-2">${project.title}</h3>
-                    <p class="text-neutral-400 mb-4 text-sm flex-grow line-clamp-3" title="${descriptionText.replace(/"/g, '&quot;')}">${descriptionText}</p>
-                    ${actionButtonsHtml}
-                </div>
-            `;
-
-            // Add click listener to open project details in a modal
-            projectCard.addEventListener('click', (e) => { // When a card is clicked...
-                if (e.target.closest('a')) return; // ...but not if it's a link.
-                // Pass the full list and current index to the modal
-                window.openProjectModal(projects, index);
-            });
-
-            fragment.appendChild(projectCard);
-        });
-        
-        // Append all cards at once
-        projectGrid.appendChild(fragment);
-
-        // --- Initialize Video Lazy Loading & Autoplay on Scroll ---
-        if ('IntersectionObserver' in window) {
-            const videoObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const video = entry.target;
-                    if (entry.isIntersecting) {
-                        if (!video.src && video.dataset.src) {
-                            video.src = video.dataset.src;
-                        }
-                        video.play().catch(err => {
-                            console.log("Video play interrupted/blocked:", err);
-                        });
-                    } else {
-                        video.pause();
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            projectGrid.querySelectorAll('video').forEach(video => {
-                videoObserver.observe(video);
-            });
-        } else {
-            // Fallback for older browsers
-            projectGrid.querySelectorAll('video').forEach(video => {
-                if (video.dataset.src) {
-                    video.src = video.dataset.src;
-                }
-                video.autoplay = true;
-            });
         }
 
-        // --- Animate cards into view ---
-        // Trigger a staggered animation on each card to have them fade and slide in.
-        const cards = Array.from(projectGrid.children);
-        cards.forEach((card, index) => {
-            setTimeout(() => card.classList.remove('opacity-0', 'translate-y-5'), index * 100);
+        projectCard.innerHTML = `
+            <div class="flex flex-col flex-grow">
+                ${featuredBadgeHtml}
+                ${mediaHtml}
+                <h3 class="text-xl font-semibold text-white mb-2">${project.title}</h3>
+                <p class="text-neutral-400 mb-4 text-sm flex-grow line-clamp-3 whitespace-pre-wrap" title="${descriptionText.replace(/"/g, '&quot;')}">${descriptionText}</p>
+                ${actionButtonsHtml}
+            </div>
+        `;
+
+        projectCard.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return;
+            window.openProjectModal(sortedProjects, index);
         });
+
+        fragment.appendChild(projectCard);
+    });
+
+    projectGrid.appendChild(fragment);
+
+    // Initialize Video Lazy Loading & Autoplay on Scroll
+    if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const video = entry.target;
+                if (entry.isIntersecting) {
+                    if (!video.src && video.dataset.src) {
+                        video.src = video.dataset.src;
+                    }
+                    video.play().catch(err => {
+                        console.log("Video play interrupted/blocked:", err);
+                    });
+                } else {
+                    video.pause();
+                }
+            });
+        }, { threshold: 0.1 });
+
+        projectGrid.querySelectorAll('video').forEach(video => {
+            videoObserver.observe(video);
+        });
+    } else {
+        projectGrid.querySelectorAll('video').forEach(video => {
+            if (video.dataset.src) {
+                video.src = video.dataset.src;
+            }
+            video.autoplay = true;
+        });
+    }
+
+    // Animate cards into view
+    const cards = Array.from(projectGrid.children);
+    cards.forEach((card, index) => {
+        setTimeout(() => card.classList.remove('opacity-0', 'translate-y-5'), index * 100);
+    });
+}
+
+// --- Load Projects (Stale-While-Revalidate) ---
+async function loadProjects() {
+    const projectGrid = document.getElementById('project-grid');
+    const GOOGLE_DRIVE_API_URL = 'https://script.google.com/macros/s/AKfycbyNGEFosJG4rEo1RvjXkIo0DxH9-LiJ_xeS1MJwmtS3XS4f6VRiHUbuwRRdH3fp1Htr/exec';
+    const CACHE_KEY = 'portfolio_projects_data_v4';
+
+    let hasRendered = false;
+    const cachedData = sessionStorage.getItem(CACHE_KEY);
+
+    // 1. Immediately render cached data if available (zero waiting time)
+    if (cachedData) {
+        try {
+            const cachedProjects = JSON.parse(cachedData);
+            if (Array.isArray(cachedProjects) && cachedProjects.length > 0) {
+                renderProjectCards(cachedProjects);
+                hasRendered = true;
+            }
+        } catch (e) {
+            console.warn("Failed to parse cached projects:", e);
+        }
+    }
+
+    // 2. Show skeleton placeholder only if there was no cached data
+    if (!hasRendered) {
+        const skeletonCards = Array(6).fill('').map(() => `
+            <div class="glass-effect rounded-xl overflow-hidden flex flex-col p-6 animate-pulse border border-white/5">
+                <div class="w-full h-48 bg-gray-600/20 rounded-lg mb-4"></div>
+                <div class="h-6 bg-gray-600/20 rounded w-2/3 mb-2"></div>
+                <div class="h-4 bg-gray-600/20 rounded w-full mb-1 flex-grow"></div>
+                <div class="h-4 bg-gray-600/20 rounded w-4/5 mb-4"></div>
+                <div class="mt-auto h-4 bg-gray-600/20 rounded w-1/3"></div>
+            </div>
+        `).join('');
+        projectGrid.innerHTML = skeletonCards;
+    }
+
+    // 3. Always fetch fresh data from Google Drive in background (Stale-While-Revalidate)
+    try {
+        const response = await fetch(GOOGLE_DRIVE_API_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const freshProjects = await response.json();
+        if (freshProjects.error) {
+            throw new Error(`Google Apps Script Error: ${freshProjects.error}`);
+        }
+
+        if (Array.isArray(freshProjects) && freshProjects.length > 0) {
+            const freshJsonStr = JSON.stringify(freshProjects);
+            // Re-render if data was updated or not rendered yet
+            if (!hasRendered || freshJsonStr !== cachedData) {
+                sessionStorage.setItem(CACHE_KEY, freshJsonStr);
+                renderProjectCards(freshProjects);
+            }
+        } else if (!hasRendered) {
+            projectGrid.innerHTML = '<p class="text-neutral-400 col-span-full text-center">No projects to display at the moment.</p>';
+        }
     } catch (error) {
-        console.error("Failed to load projects:", error);
-        projectGrid.innerHTML = `<p class="text-red-400 col-span-full text-center">Could not load projects: ${error.message}</p>`;
+        console.error("Failed to fetch fresh projects from Drive:", error);
+        if (!hasRendered) {
+            projectGrid.innerHTML = `<p class="text-red-400 col-span-full text-center">Could not load projects: ${error.message}</p>`;
+        }
     }
 }
 
@@ -355,10 +377,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const isAsteroid = project.title && project.title.toLowerCase().includes('asteroid');
         const ASTEROID_PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.DevUp.AsteroidRun';
 
-        let descriptionText = project.description ? project.description : 'Project folder loaded from Google Drive.';
-        if (isAsteroid) {
-            descriptionText = 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.';
-        }
+        // Prioritize description from Google Drive first, fallback only if empty
+        const descriptionText = (project.description && project.description.trim())
+            ? project.description.trim()
+            : (isAsteroid
+                ? 'Asteroid Run is an addictive cosmic physics puzzle game! Slingshot expressive 3D planets around a central gravity well, merge identical worlds to evolve them from tiny asteroids into the blazing Sun, and keep your cool before the jar overflows.'
+                : 'Project folder loaded from Google Drive.');
 
         let badgeHtml = '';
         let modalActionsHtml = `
